@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>兴趣使然的第一步</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="styles/raindrop.css">
+    <link rel="stylesheet" href="styles/swiper.min.css">
+    <style>
+	    body,div,header,ul,li,input,h1,h3{
+	        padding: 0;
+	        margin: 0;
+	        list-style: none;
+	    }
+	    a{
+	        text-decoration: none;
+	        outline: none;
+	        color: #222;
+	    }
+	    html, body {
+	        position: relative;
+	        height: 100%;
+	    }
+	    body {
+	        background: #eee;
+	        font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+	        font-size: 14px;
+	        color:#000;
+	        margin: 0;
+	        padding: 0;
+	    }
+	    .swiper-container {
+	        width: 100%;
+	        height: 100%;
+	        margin-left: auto;
+	        margin-right: auto;
+	    }
+	    .swiper-slide {
+	        text-align: center;
+	        font-size: 18px;
+	        background: #fff;
+	        /* Center slide text vertically */
+	        display: -webkit-box;
+	        display: -ms-flexbox;
+	        display: -webkit-flex;
+	        display: flex;
+	        -webkit-box-pack: center;
+	        -ms-flex-pack: center;
+	        -webkit-justify-content: center;
+	        justify-content: center;
+	        -webkit-box-align: center;
+	        -ms-flex-align: center;
+	        -webkit-align-items: center;
+	        align-items: center;
+	    }
+	    header{
+            width: 100%;
+            height: 90px;
+            background: rgba(255,255,255,0.4);
+            position: fixed;
+            top: 0;left: 0;
+            line-height: 90px;
+            z-index: 999;
+        }
+        .top-box{
+            width: 80%;
+            height: 100%;
+            margin: 0 auto;
+            text-align: center;
+            perspective: 800px;
+            transform-style: preserve-3d;
+        }
+        .headline{
+        	position: relative;
+        	top: 0;left: 45px;
+        	display: inline-block;
+        	height: 100%;
+        	line-height: 90px;
+        	font-size: 40px;
+        	color: #444444;
+        	text-shadow: 1px 1px 1px #ccc;
+        }
+        .clock{
+        	float: right;
+        }
+        .title{
+            color: white;
+            text-align: center;
+            position: relative;
+            top: -160px;left: 0;
+        }
+        h1{
+            font-size: 50px;
+            white-space:nowrap;
+        }
+        h3{
+            font-size: 26px;
+            white-space:nowrap;
+        }
+        .play{
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -50px;
+            margin-top: -50px;
+        }
+        .play > img{
+            width: 100%;
+            height: 100%;
+        }
+        canvas,h1,h3,li,.play{
+            user-select: none;
+        }
+        aside{
+            position: fixed;
+            height: 140px;
+            width: 50px;
+            top: 50%;
+            margin-top: -70px;
+            right: 0;
+        }
+        aside > a{
+            width: 10px;
+            height: 10px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            display: block;
+            margin-bottom: 20px;
+        }
+        aside > a.active{
+            background: #ccc;
+        }
+        .page1,.page2,.page3{
+            background-image: url(statics/timg.jpg);
+            background-size: cover;
+        }
+        .container{
+			width: 100px;
+			height: 150px;
+			position: relative;
+			left: 0;top: 0;
+			margin: 200px auto;
+			perspective: 2000px;
+			transform-style: preserve-3d;
+			transform: rotateX(-10deg);
+		}
+		.card{
+			width: 100px;
+			height: 150px;
+			position: absolute;
+			left: 0;top: 0;
+			border-radius: 10px;
+			box-shadow: 0 0 10px grey;
+			background-size: 100px 150px;
+		}
+		.shadow{
+			width: 100px;
+			height: 150px;
+			position: absolute;
+			left: 0;top: 170px;
+			border-radius: 10px;
+			box-shadow: 0 0 10px grey;
+			background-size: 100px 150px;
+			transform: scale(1,-1);
+			-webkit-mask: linear-gradient(rgba(0,0,0,0) 60%,rgba(0,0,0,0.7));
+		}
+		.skillList > div{
+			margin-bottom: 30px;
+			font-size: 30px;
+			display: none;
+		}
+		.skillList > div > span{
+			margin-right: 10px;
+			padding: 0 20px; 
+			background-color: rgb(35,35,35);
+			border-radius: 6px;
+			color: white;
+			transition: 2s;
+			position: relative;
+			display: inline-block;
+		}
+		span:hover{
+			transform: scale(2) rotate(360deg);
+			z-index: 200;		
+		}
+		.rotateBox{
+			width: 300px;
+			height: 300px;
+			position: relative;
+			top: -35px;left: -255px;
+			transition: 0.7s; 
+			transform-style: preserve-3d;
+		}
+		.anonymous,.photo{
+			width: 300px;
+			height: 300px;
+			position: absolute;
+			top: 0;left: 0;
+			border-radius: 20px;
+			overflow: hidden;
+		}
+		.anonymous{
+			backface-visibility: hidden;
+			z-index: 1;
+		}
+		.photo{
+			transform: scale(-1,1);
+		}
+		.anonymous > img,.photo > img{
+			width: 90%;
+			height: 100%;
+		}
+		.intro > div{
+			margin-bottom: 10px;
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			font-size: 24px;
+			opacity: 0;
+		}
+		.intro > div:nth-child(1){
+			font-size: 36px;
+			margin-top: -70px;
+			margin-bottom: 50px;
+			font-weight: bold;
+		}
+		.intro > div:last-child{
+			margin-bottom: 0;
+		}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-box">
+    		<div class="headline">Index</div>
+        	<div class="clock">
+        		<canvas width="90" height="90"></canvas>
+        	</div>
+        </div>
+    </header>
+    <!-- Swiper -->
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide page1">
+                <div class="title">
+                    <h1>The world would change</h1><br/>
+                    <h3>if you click</h3>
+                </div>
+                <div class="play">
+                    <img src="statics/play.png" />
+                </div>
+                <div class="raindrop"></div>
+            </div>
+            <div class="swiper-slide page2">
+            	<div class="rotateBox">
+            		<div class="anonymous">
+	            		<img src="statics/anonymous.png" />
+	            	</div>
+	            	<div class="photo">
+	            		<img src=statics/photo.png />
+	            	</div>
+            	</div>
+            	<div class="intro">
+            		<div>自我评价</div>
+            		<div>热爱学习 善于思考</div>
+            		<div>喜欢优雅而又严谨的代码</div>
+            		<div>相信一切的创意 源于生活又高于生活</div>
+            	</div>
+            </div>
+            <div class="swiper-slide page3">
+            	<div class="skillList">
+            		<div>
+            			<span>HTML</span>
+            			<span>CSS</span>
+            			<span>DOM</span>
+            		</div>
+            		<div>
+            			<span>JavaScript</span>
+            			<span>jQuery</span>
+            			<span>Ajax</span>
+            			<span>JSONP</span>
+            		</div>
+            		<div>
+            			<span>HTML5</span>
+            			<span>CSS3</span>
+            			<span>ES6</span>
+            		</div>
+            		<div>
+            			<span>AngularJS</span>
+            			<span>Vue</span>
+            			<span>ReactJS</span>
+            		</div>
+            		<div>
+            			<span>面向对象</span>
+            			<span>NodeJS</span>
+            			<span>Swiper</span>
+            			<span>RequireJS</span>
+            		</div>
+            		<div>
+            			<span>PhotoShop</span>
+            			<span>Zepto</span>
+            			<span>gulp</span>
+            		</div>
+            	</div>
+            </div>
+            <div class="swiper-slide">
+            	<canvas class="bg3"></canvas>
+            	<div class="container"></div>
+            </div>
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="js/jquery-starfield.min.js"></script>
+    <script src="js/swiper.min.js"></script>
+    <script type="text/javascript" src="js/bg.js"></script>
+    <script type="text/javascript" src="js/clock.js"></script>
+    <script>
+    var bSin3=false;
+    var headlineArr=['Index','About ME','My Skills','My Project'];
+    var swiper = new Swiper('.swiper-container', {
+        pagination: '.swiper-pagination',
+        direction: 'vertical',
+        slidesPerView: 1,
+        paginationClickable: true,
+        spaceBetween: 30,
+        mousewheelControl: true,
+        simulateTouch: false,
+        onTransitionStart: function(swiper){
+        	var oHeadline=document.querySelector('.headline');
+        	oHeadline.style.transform='rotateX(90deg)';
+        	oHeadline.style.transition='0.15s';
+        	oHeadline.addEventListener('transitionend',() => {
+        		oHeadline.innerHTML=headlineArr[swiper.activeIndex];
+        		
+        	},false);
+        	setTimeout(() => {
+        		oHeadline.style.transform='rotateX(0deg)';
+        		
+        	},200);
+        },
+        onTransitionEnd: function(swiper){
+            switch (swiper.activeIndex){
+            	case 1:
+            		var rotateBox=document.querySelector('.rotateBox');
+            		var intro=document.querySelectorAll('.intro div');
+            		intro.forEach(function(txt,index){
+            			txt.style.backgroundImage=`-webkit-linear-gradient(black 45%,#ccc)`;
+            			txt.style.opacity=1;
+            			txt.style.transition=`1s ${index*1}s`;
+            		});
+            		intro[intro.length-1].addEventListener('transitionend',function(){
+            			rotateBox.style.transform=`perspective(800px) rotateY(-180deg)`;
+            		},false);
+            		break;
+                case 2:
+                    $('.skillList div').slideDown();
+                    break;
+                case 3:
+                	if(bSin3) return;
+                    var oCon=document.querySelector('.container');
+					var amount=9;
+					var rotateXDegree=0;
+					var rotateYDegree=10;
+					var speedX=0;
+					var speedY=0;
+					var lastX=0;
+					var lastY=0;
+					var timer=null;
+                    var bClicked=false;
+					document.body.onmousedown=oCon.onmousedown=function(ev){
+						ev.preventDefault();
+						return false;
+					};
+					for (var i=0;i<amount;i++){
+						var oDiv=document.createElement('div');
+							oDiv.classList.add('card');
+							oDiv.style.backgroundImage=`url(statics/list/demo${i}.png)`;
+							oDiv.style.transition=`0.8s ${(amount-i)*0.3}s`;
+                            oDiv.dataset.index=i;
+							oDiv.addEventListener('click',function(){
+                                bClicked && window.open(`./demo/demo${this.dataset.index}.html`);
+							},false);
+
+						var oShadow=document.createElement('div');
+							oShadow.classList.add('shadow');
+							oShadow.style.backgroundImage=`url(statics/list/demo${i}.png)`;
+
+						(function(ele,index){
+							setTimeout(function(){
+								ele.style.transform=`rotateY(${index*360/amount}deg) translateZ(300px)`;
+							});
+						})(oDiv,i);
+
+						oDiv.appendChild(oShadow);
+						oCon.appendChild(oDiv);
+					}
+
+					var aCard=document.querySelectorAll('.card');
+					aCard.forEach(function(oCard){
+						oCard.onmousedown=function(ev){
+							ev.preventDefault();
+							return false;
+						};
+					});
+
+					aCard[0].addEventListener('transitionend',function(){
+						aCard.forEach(function(oCard,index){
+							oCard.style.opacity=0.4+Math.abs(index*360/amount-180)/180;
+							oCard.style.transition='0.4s';
+						});
+					},false);
+
+					document.onmousedown=function({
+						clientX,
+						clientY
+					}){
+                        bClicked=true;
+                        var clickTime=setTimeout(function(){
+                            bClicked=false;
+                        },200);
+						clearInterval(timer);
+						aCard.forEach(function(oCard){
+							oCard.style.transition='0s';
+						});
+						var disX=clientX-rotateXDegree*4;
+						var disY=clientY-rotateYDegree*4;
+						document.onmousemove=function({
+							clientX,
+							clientY
+						}){
+							var deltaX=clientX-disX;
+							var deltaY=clientY-disY;
+							rotateXDegree=deltaX*0.25;
+							rotateYDegree=deltaY*0.25;
+							setPosition();
+							speedX=rotateXDegree-lastX;
+							speedY=rotateYDegree-lastY;
+							lastX=rotateXDegree;
+							lastY=rotateYDegree;
+						};
+						document.onmouseup=function(){
+							document.onmousemove=null;
+							document.onmouseup=null;
+                            clearTimeout(clickTime);
+							timer=setInterval(function(){
+								rotateXDegree+=speedX;
+								rotateYDegree+=speedY;
+								speedX*=0.95;
+								speedY*=0.95;
+								setPosition();
+							},16);
+						};
+						function setPosition(){
+							aCard.forEach(function(oCard,index){
+								oCard.style.transform=`rotateY(${index*360/amount+rotateXDegree}deg) translateZ(300px)`;
+								oCard.style.opacity=0.4+Math.abs(Math.abs(index*360/amount+rotateXDegree)%360-180)/180;
+							});
+							oCon.style.transform=`rotateX(${-rotateYDegree}deg)`;
+						};
+						return false;
+					};
+					bSin3=true;
+                    break;
+            }
+        }
+    });
+    </script>
+    <script type="text/javascript">
+        var bPlay=document.querySelector('.play');
+        var raindrop=document.querySelector('.raindrop');
+        bPlay.onclick=function(){
+            raindrop.style.animation=`drop 3s cubic-bezier(0, 0, 1, 0.5)`;
+            setTimeout(function(){
+                $('.page1').starfield({
+                	starDensity:0.3
+                });
+            },1000);
+            bPlay.onclick=null;
+        };
+        bPlay.onmousedown=function(ev){
+        	ev.preventDefault();
+        }
+    </script>
+</body>
+</html>

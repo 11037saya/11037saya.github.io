@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		body{
+			margin: 0;
+			padding: 0;
+			background: black;
+			text-align: center;
+		}
+		canvas{
+			background: white;
+			margin-top: 20px;
+		}
+	</style>
+</head>
+<body>
+	<canvas width="400" height="400"></canvas>
+	<script type="text/javascript">
+		var oC=document.querySelector('canvas');
+		var ctx=oC.getContext('2d');
+
+		var direction=0;
+		var c=0;
+		var timer=null;
+		var posX=150;
+		var posY=150;
+
+		var oImage=new Image();
+		oImage.src='statics/2d-2.png';
+		var l=96;
+
+		oImage.onload=function(){
+			setInterval(function(){
+				ctx.clearRect(0,0,oC.width,oC.height);
+				ctx.drawImage(oImage,c%4*l,direction*l,l,l,posX,posY,l,l);
+				c++;
+			},40);
+			window.onkeydown=function({keyCode}){
+				clearInterval(timer);
+				switch (keyCode){
+					case 37:direction=1;break;
+					case 38:direction=3;break;
+					case 39:direction=2;break;
+					case 40:direction=0;break;
+				}
+				timer=setInterval(function(){
+					switch (keyCode){
+						case 37:posX--;break;
+						case 38:posY--;break;
+						case 39:posX++;break;
+						case 40:posY++;break;
+				}
+				},16);
+			}
+			window.onkeyup=function(){
+				clearInterval(timer);
+			}
+		};
+	</script>
+</body>
+</html>

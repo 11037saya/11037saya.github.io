@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<style>
+		*{margin:0;padding:0}
+		li{list-style:none;}
+			ul{
+				width:510px;
+				margin:100px auto;
+			}
+			ul li{
+				float:left;
+				width:150px;
+				height:150px;
+				background:#ccc;
+				margin:10px;
+			}
+		</style>
+		<script type="text/javascript" src="js/move.js"></script>
+		<script>
+			window.onload=function(){
+				var oUl=document.getElementById('box');
+				var aLi=oUl.children;
+				var oBtn=document.getElementById('btn1');
+				var pos=[];
+				for (var i=0;i<aLi.length;i++){
+					pos[i]={
+						left:aLi[i].offsetLeft,
+						top:aLi[i].offsetTop
+					};
+				}
+				for (var i=0;i<aLi.length;i++){
+					aLi[i].style.position='absolute';
+					aLi[i].style.left=pos[i].left+'px';
+					aLi[i].style.top=pos[i].top+'px';
+					aLi[i].style.margin=0;
+				}
+				var timer=null;
+				var bSin=false;
+				oBtn.onclick=function(){
+					if(bSin) return;
+					bSin=true;
+					var i=0;
+					timer=setInterval(function(){
+						(function(index){
+							move(aLi[index],{width:0,height:0,left:0,top:0,opacity:0},{
+								fnEnd:function(){
+									if(index==aLi.length-1){
+										for (var i=0;i<aLi.length;i++){
+											aLi[i].style.background='rgb('+parseInt(Math.random()*256)+','+parseInt(Math.random()*256)+','+parseInt(Math.random()*256)+')';
+										}
+										timer=setInterval(function(){
+											(function(index2){
+												move(aLi[index2],{width:150,height:150,left:pos[index].left,top:pos[index].top,opacity:1},{
+													fnEnd:function(){
+														if(index2==0){
+															bSin=false;
+														}
+													}
+												});
+											})(index);
+											index--;
+											if(index==-1){
+												clearInterval(timer);
+											}
+										},200);
+									}
+								}
+							});
+						})(i);
+						i++;
+						if(i==aLi.length){
+							clearInterval(timer);
+						}
+					},200);
+				};
+			};
+		</script>
+	</head>
+	<body>
+		<input type="button" value="下一页" id="btn1" />
+		<ul id="box">
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</body>
+</html>

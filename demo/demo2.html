@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		body{
+			background: black;
+		}
+		#box{
+			width: 700px;
+			height: 400px;
+			margin: 50px auto;
+			background-image: url(statics/1.jpg);
+			background-repeat: no-repeat;
+			background-size: cover;
+			-webkit-mask: -webkit-radial-gradient(20px 20px,circle,red 30px,rgba(0,0,0,0) 40px);
+		}
+	</style>
+</head>
+<body>
+	<div id="box"></div>
+	<script type="text/javascript">
+		var oDiv=document.querySelector('div');
+		oDiv.onmousemove=function({
+			clientX,
+			clientY
+		}){
+			this.style.WebkitMask=`-webkit-radial-gradient(${
+				clientX-oDiv.offsetLeft
+			}px ${
+				clientY-oDiv.offsetTop
+			}px,circle,red 30px,rgba(0,0,0,0) 40px)`;
+		};
+	</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		body{
+			margin: 0;
+			padding: 0;
+		}
+		#container{
+			width: 298px;
+			height: 298px;
+			border: 1px solid black;
+			margin: 100px auto;
+			border-radius: 50%;
+			position: relative;
+		}
+		.hour{
+			width: 10px;
+			height: 30px;
+			background: red;
+			position: absolute;
+			left: 145px;
+			top: 120px;
+			transform-origin: bottom center;
+		}
+		.minute{
+			width: 6px;
+			height: 80px;
+			background: blue;
+			position: absolute;
+			left: 147px;
+			top: 70px;
+			transform-origin: bottom center;
+		}
+		.second{
+			width: 4px;
+			height: 110px;
+			background: #ccc;
+			position: absolute;
+			left: 148px;
+			top: 40px;
+			transform-origin: bottom center;
+		}
+		.center{
+			width: 18px;
+			height: 18px;
+			background: #ccc;
+			border: 1px solid black;
+			border-radius: 50%;
+			position: absolute;
+			left: 140px;
+			top: 140px;
+		}
+		.mark{
+			width: 4px;
+			height: 20px;
+			position: absolute;
+			left: 148px;
+			background: black;
+			transform-origin: 2px 150px;
+		}
+	</style>
+</head>
+<body>
+	<div id="container">
+		<div class="hour"></div>
+		<div class="minute"></div>
+		<div class="second"></div>
+		<div class="center"></div>
+	</div>
+	<script type="text/javascript">
+		var oClock=document.querySelector('#container');
+		var oHour=document.querySelector('.hour');
+		var oMinute=document.querySelector('.minute');
+		var oSecond=document.querySelector('.second');
+		setInterval(function(){
+			var oDate=new Date();
+			var h=oDate.getHours();
+			var m=oDate.getMinutes();
+			var s=oDate.getSeconds();
+			var ms=oDate.getMilliseconds();
+			oHour.style.transform=`rotate(${(h+m/60)/12*360}deg)`;
+			oMinute.style.transform=`rotate(${(m+s/60)/60*360}deg)`;
+			oSecond.style.transform=`rotate(${(s+ms/1000)/60*360}deg)`;
+		},16);
+		var count=12;
+		for (var i = 0 ; i < count ; i++) {
+			var oMark=document.createElement('div');
+			oMark.classList.add('mark');
+			oMark.style.transform=`rotate(${i/12*360}deg)`;
+			oClock.appendChild(oMark);
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		body{
+			background: black;
+			margin: 0;
+			padding: 0;
+			font-size: 0;
+		}
+		canvas{
+			background-image: url(statics/FishingMaster/img/game_bg_2_hd.jpg);
+		}
+	</style>
+</head>
+<body>
+	<canvas width="800" height="600"></canvas>
+	<script type="text/javascript" src="js/resources.js"></script>
+	<script type="text/javascript" src="js/common.js"></script>
+	<script type="text/javascript" src="js/class/fish.js"></script>
+	<script type="text/javascript" src="js/class/cannon.js"></script>
+	<script type="text/javascript" src="js/class/bullet.js"></script>
+	<script type="text/javascript" src="js/class/dieFish.js"></script>
+	<script type="text/javascript" src="js/class/net.js"></script>
+	<script type="text/javascript" src="js/class/coin.js"></script>
+	<script type="text/javascript">
+		var oC=document.querySelector('canvas');
+		var ctx=oC.getContext('2d');
+
+		var resources={};
+
+		var fishArray=[];
+
+		var bulletArray=[];
+
+		var dieFishArray=[];
+
+		var netArray=[];
+
+		var coinArray=[];
+
+		var chance=0.03;
+		var distance=100;
+
+		loadStatics(statics,function(){
+			var cannon=new Cannon(4);
+			setInterval(function(){
+				ctx.clearRect(0,0,oC.width,oC.height);
+				if(Math.random()<chance){
+					var fish=new Fish(rnd(1,6));
+					fish.y=rnd(100,500);
+					if(Math.random() > 0.5){
+						fish.x=-distance;
+						fish.rotate=rnd(-45,45)*pi/180;
+					}else{
+						fish.x=oC.width+distance;
+						fish.rotate=rnd(135,225)*pi/180;
+					}
+					fishArray.push(fish);
+				}
+				
+				//碰撞检测
+				for(var fi=0;fi<fishArray.length;fi++){
+					var fish=fishArray[fi];
+					for(var bi=0;bi<bulletArray.length;bi++){
+						var {
+							x,y
+						} = bulletArray[bi];
+						
+						if(!fish) continue;
+						if(fish.isIn(x,y)){
+							fish.die();
+							bulletArray[bi].die();
+							
+							var dieFish=new DieFish(fish.kind);
+							dieFish.x=fish.x;
+							dieFish.y=fish.y;
+							dieFish.rotate=fish.rotate;
+							dieFishArray.push(dieFish);
+
+							var net=new Net(cannon.kind);
+							net.x=dieFish.x;
+							net.y=dieFish.y;
+							netArray.push(net);
+
+							setTimeout(() => {
+								var coin=new Coin(fish.kind > 3 ? 2 : 1);
+								coin.x=dieFish.x;
+								coin.y=dieFish.y;
+								coinArray.push(coin);
+
+								dieFishArray.shift().disappear();
+								netArray.shift();
+							},1000);
+
+							fishArray.splice(fi,1);
+							bulletArray.splice(bi,1);
+							fi--;
+							break;
+						}
+					}
+				}
+
+				//draw fish
+				for(var i=0;i<fishArray.length;i++){
+					fishArray[i].draw();
+					if(fishArray[i].x < -distance ||
+						fishArray[i].x > distance + oC.width ||
+						fishArray[i].y < -distance ||
+						fishArray[i].y > distance + oC.height
+					){
+						fishArray[i].die();
+						fishArray.splice(i,1);
+						i--;
+					}
+				}
+
+				//draw dieFish
+				dieFishArray.forEach(function(dieFish,index){
+					dieFish.draw();
+				});
+
+				//draw net
+				netArray.forEach(function(net,index){
+					net.draw();
+				});
+
+				//draw coin
+				for(var i=0;i<coinArray.length;i++){
+					coinArray[i].draw();
+					if(coinArray[i].x < -60){
+						new Audio('statics/FishingMaster/sound/coin.wav').play();
+						coinArray.splice(i,1);
+						i--;
+					}
+				}
+
+				//draw battery
+				ctx.drawImage(resources.bottom,
+					0,0,765,70,
+ 					0,532,765,70
+				);
+
+				//draw bullet
+				for(var i=0;i<bulletArray.length;i++){
+					bulletArray[i].draw();
+					if(bulletArray[i].x < -distance ||
+						bulletArray[i].x > oC.width + distance ||
+						bulletArray[i].y < -distance ||
+						bulletArray[i].y > oC.height + distance
+					){
+						bulletArray[i].die();
+						bulletArray.splice(i,1);
+						i--;
+					}
+				}
+
+				//draw cannon
+				cannon.draw();
+			},16);
+			oC.onclick=function(){
+				cannon.emit();
+				var bullet=new Bullet(cannon.kind);
+				bullet.rotate=cannon.rotate;
+				bulletArray.push(bullet);
+			};
+			oC.onmousemove=function(ev){
+				var {
+					pageX,
+					pageY
+				}=ev;
+
+				cannon.rotate=-Math.atan2(cannon.x-pageX,cannon.y-pageY);
+			}
+		});
+	</script>
+</body>
+</html>
